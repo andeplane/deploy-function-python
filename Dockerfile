@@ -1,7 +1,7 @@
-FROM python:3-alpine
+FROM andershaf/python3-cognite-sdk-experimental
+# FROM python:3
+
+# RUN pip install cognite-sdk-experimental
 
 COPY . /
-
-RUN pip install cognite-sdk-experimental
-
 CMD python src/index.py
