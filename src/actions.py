@@ -36,7 +36,7 @@ def zip_and_upload_folder(functions_api, folder, name) -> int:
       os.chdir(current_dir)
 
 def await_function_deployment(functions_api, external_id):
-  wait_time_seconds = 180.0
+  wait_time_seconds = 240.0
   t_end = time.time() + wait_time_seconds
   while time.time() < t_end:
     function = functions_api.retrieve(external_id=external_id)
@@ -63,8 +63,8 @@ def create_and_wait_for_deployment(functions_api, name, external_id, file_id):
   print(f"Created function {external_id}. Waiting for deployment ...", flush=True)
   deployed = await_function_deployment(functions_api, function.external_id)
   if not deployed:
-    print(f"Function {external_id} did not deploy within 120 seconds.", flush=True)
-    raise FunctionDeployTimeout(f"Function {external_id} did not deploy within 120 seconds.")
+    print(f"Function {external_id} did not deploy within 240 seconds.", flush=True)
+    raise FunctionDeployTimeout(f"Function {external_id} did not deploy within 240 seconds.")
   print(f"Function {external_id} is deployed.", flush=True)
   return function
 
