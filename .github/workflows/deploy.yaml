@@ -32,9 +32,10 @@ jobs:
           function_path: ${{ matrix.functions }}
       - name: Run integration tests
         env:
-          INPUT_CDF_CREDENTIALS: ${{ secrets.COGNITE_API_KEY }}
-          INPUT_CDF_PROJECT: datastudio
-          INPUT_CDF_BASE_URL: https://greenfield.cognitedata.com
+          COGNITE_API_KEY: ${{ secrets.COGNITE_API_KEY }}
+          COGNITE_PROJECT: datastudio
+          COGNITE_BASE_URL: https://greenfield.cognitedata.com
+          COGNITE_CLIENT_NAME: cognite-function-deploy
         run: |
           pip install pytest
           pytest

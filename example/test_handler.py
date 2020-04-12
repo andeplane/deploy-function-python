@@ -8,11 +8,7 @@ GITHUB_HEAD_REF   = os.environ["GITHUB_HEAD_REF"]
 
 @pytest.fixture
 def client():
-    client = CogniteClient(
-      api_key=os.environ["INPUT_CDF_CREDENTIALS"], 
-      project=os.environ["INPUT_CDF_PROJECT"], 
-      base_url=os.environ["INPUT_CDF_BASE_URL"], 
-      client_name="deploy-function-action")
+    client = CogniteClient()
     return client
 
 @pytest.fixture
