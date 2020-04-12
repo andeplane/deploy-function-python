@@ -14,11 +14,11 @@ def client():
 @pytest.fixture
 def data():
     return {
-      "value": 2.0
+      "value": 1.0
     }
 
 def test_handler(client, data):
   external_id = f"{GITHUB_REPOSITORY}/example/{GITHUB_HEAD_REF}"
   function = client.functions.retrieve(external_id=external_id)
   response = function.call(data=data)
-  print(response)
+  print(response.json())
