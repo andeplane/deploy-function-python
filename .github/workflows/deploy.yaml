@@ -25,6 +25,6 @@ jobs:
         with:
           cdf_project: andershaf
           cdf_credentials: ${{ secrets.COGNITE_API_KEY }}
-          function_path: example
+          function_paths: [example, example2]
       - name: Run integration tests
         run: echo "AlL tEStS PaSsED"

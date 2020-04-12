@@ -5,9 +5,10 @@ from actions import handle_pull_request, handle_push
 CDF_PROJECT = os.getenv("INPUT_CDF_PROJECT")
 CDF_CREDENTIALS = os.getenv("INPUT_CDF_CREDENTIALS")
 CDF_BASE_URL = os.getenv("INPUT_CDF_BASE_URL", "https://api.cognitedata.com")
-FUNCTION_PATH = os.getenv("INPUT_FUNCTION_PATH")
+FUNCTION_PATHS = os.getenv("INPUT_FUNCTION_PATHS")
 GITHUB_EVENT_NAME = os.environ["GITHUB_EVENT_NAME"]
 GITHUB_REF = os.environ["GITHUB_REF"]
+print("FUNCTION_PATH: ", FUNCTION_PATHS)
 
 if not (CDF_PROJECT and CDF_CREDENTIALS and FUNCTION_PATH):
   print("Missing one of inputs cdf_project, cdf_credentials, function_path", flush=True)
