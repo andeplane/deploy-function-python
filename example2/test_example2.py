@@ -4,7 +4,9 @@ from cognite.experimental import CogniteClient
 
 print(os.environ)
 GITHUB_REPOSITORY = os.environ["GITHUB_REPOSITORY"]
+GITHUB_EVENT_NAME = os.environ["GITHUB_EVENT_NAME"]
 GITHUB_HEAD_REF   = os.environ["GITHUB_HEAD_REF"]
+GITHUB_SHA        = os.environ["GITHUB_SHA"]
 
 @pytest.fixture
 def client():
@@ -19,6 +21,8 @@ def data():
 
 def test_handler(client, data):
   external_id = f"{GITHUB_REPOSITORY}/example/{GITHUB_HEAD_REF}"
+  if GITHUB_EVENT_NAME == "push":
+    external_id = f"{GITHUB_REPOSITORY}/example:{GITHUB_SHA}"
   function = client.functions.retrieve(external_id=external_id)
   response = function.call(data=data)
   print(response.json())
