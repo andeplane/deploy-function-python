@@ -36,12 +36,14 @@ def zip_and_upload_folder(functions_api, folder, name) -> int:
       os.chdir(current_dir)
 
 def await_function_deployment(functions_api, external_id):
-  wait_time_seconds = 120.0
+  wait_time_seconds = 180.0
   t_end = time.time() + wait_time_seconds
   while time.time() < t_end:
     function = functions_api.retrieve(external_id=external_id)
     if function.status == "Ready":
       return True
+    if function.status == "Failed":
+      return False
     time.sleep(1.0)
 
   return False
