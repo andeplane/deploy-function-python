@@ -67,7 +67,7 @@ def create_and_wait_for_deployment(functions_api, name, external_id, file_id):
   return function
 
 def handle_push(functions_api):
-  function_name = f"{GITHUB_REPOSITORY}:{GITHUB_SHA}"
+  function_name = f"{GITHUB_REPOSITORY}/{FUNCTION_PATH}:{GITHUB_SHA}"
   external_id = function_name
   file_name = function_name.replace("/", "_")+".zip" # / not allowed in file names
   
@@ -78,7 +78,7 @@ def handle_push(functions_api):
   create_and_wait_for_deployment(functions_api, function_name, external_id, file_id) # Upload new
   
   # Delete :latest and recreate immediately. This will hopefully be fast because file_id is cached
-  function_name_latest = GITHUB_REPOSITORY+":latest"
+  function_name_latest = f"GITHUB_REPOSITORY/{FUNCTION_PATH}:latest"
   external_id_latest = function_name_latest
   try_delete_function(functions_api, external_id_latest)
   function = create_and_wait_for_deployment(functions_api, function_name_latest, external_id_latest, file_id)
@@ -87,7 +87,7 @@ def handle_push(functions_api):
   print(f"Successfully created and deployed function {external_id} with id {function.id}", flush=True)
   
 def handle_pull_request(functions_api):
-  function_name = f"{GITHUB_REPOSITORY}/{GITHUB_HEAD_REF}"
+  function_name = f"{GITHUB_REPOSITORY}/{FUNCTION_PATH}/{GITHUB_HEAD_REF}"
   external_id = function_name
   try_delete_function(functions_api, external_id)
   if os.getenv("DELETE_PR_FUNCTION"):
