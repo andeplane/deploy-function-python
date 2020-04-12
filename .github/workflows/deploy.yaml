@@ -26,7 +26,8 @@ jobs:
       - name: Deploy
         uses: ./
         with:
-          cdf_project: andershaf
+          cdf_project: datastudio
+          cdf_base_url: https://greenfield.cognitedata.com
           cdf_credentials: ${{ secrets.COGNITE_API_KEY }}
           function_path: ${{ matrix.functions }}
       - name: Run integration tests

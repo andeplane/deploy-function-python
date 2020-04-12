@@ -16,8 +16,8 @@ jobs:
         env: 
           DELETE_PR_FUNCTION: true
         with:
-          cdf_project: andershaf
-          cdf_base_url: https://api.cognitedata.com
+          cdf_project: datastudio
+          cdf_base_url: https://greenfield.cognitedata.com
           cdf_credentials: ${{ secrets.COGNITE_API_KEY }}
           function_path: ${{ matrix.functions }}
           
