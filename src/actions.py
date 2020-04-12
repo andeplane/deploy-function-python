@@ -14,7 +14,7 @@ class FunctionDeployTimeout(Exception):
     pass
 
 def zip_and_upload_folder(functions_api, folder, name) -> int:
-  print(f"Uploading source code from {folder} to {name}")
+  print(f"Uploading source code from {folder} to {name}", flush=True)
   current_dir = os.getcwd()
   os.chdir(folder)
 
@@ -49,21 +49,21 @@ def await_function_deployment(functions_api, external_id):
 def try_delete_function(functions_api, external_id):
   try:
     function = functions_api.retrieve(external_id=external_id)
-    print(f"Found existing function {external_id}. Deleting ...")
+    print(f"Found existing function {external_id}. Deleting ...", flush=True)
     functions_api.delete(external_id=external_id)
-    print(f"Did delete function {external_id}.")
+    print(f"Did delete function {external_id}.", flush=True)
   except:
-    print(f"Did not delete function {external_id}.")
+    print(f"Did not delete function {external_id}.", flush=True)
 
 def create_and_wait_for_deployment(functions_api, name, external_id, file_id):
-  print(f"Will create function {external_id}")
+  print(f"Will create function {external_id}", flush=True)
   function = functions_api.create(name=name, external_id=external_id, file_id=file_id)
-  print(f"Created function {external_id}. Waiting for deployment ...")
+  print(f"Created function {external_id}. Waiting for deployment ...", flush=True)
   deployed = await_function_deployment(functions_api, function.external_id)
   if not deployed:
-    print(f"Function {external_id} did not deploy within 120 seconds.")
+    print(f"Function {external_id} did not deploy within 120 seconds.", flush=True)
     raise FunctionDeployTimeout(f"Function {external_id} did not deploy within 120 seconds.")
-  print(f"Function {external_id} is deployed.")
+  print(f"Function {external_id} is deployed.", flush=True)
   return function
 
 def handle_push(functions_api):
@@ -84,7 +84,7 @@ def handle_push(functions_api):
   function = create_and_wait_for_deployment(functions_api, function_name_latest, external_id_latest, file_id)
   try_delete_function(functions_api, external_id)
 
-  print(f"Successfully created and deployed function {external_id} with id {function.id}")
+  print(f"Successfully created and deployed function {external_id} with id {function.id}", flush=True)
   
 def handle_pull_request(functions_api):
   function_name = f"{GITHUB_REPOSITORY}/{GITHUB_HEAD_REF}"
@@ -96,5 +96,7 @@ def handle_pull_request(functions_api):
   # Upload file
   file_name = function_name.replace("/", "_")+".zip" # / not allowed in file names
   file_id = zip_and_upload_folder(functions_api, FUNCTION_PATH, file_name)
-  create_and_wait_for_deployment(functions_api, function_name, external_id, file_id)
+  function = create_and_wait_for_deployment(functions_api, function_name, external_id, file_id)
+
+  print(f"Successfully created and deployed PR function {external_id} with id {function.id}", flush=True)
   
