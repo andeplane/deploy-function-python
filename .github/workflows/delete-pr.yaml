@@ -1,4 +1,4 @@
-name: Delete Cognite Function
+name: Delete PR Function
 on:
   pull_request:
     types: closed
@@ -16,4 +16,3 @@ jobs:
           cdf_project: andershaf
           cdf_base_url: https://api.cognitedata.com
           cdf_credentials: ${{ secrets.COGNITE_API_KEY }}
-          function_path: example
