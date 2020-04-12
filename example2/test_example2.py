@@ -21,9 +21,9 @@ def data():
     }
 
 def test_handler(client, data):
-  external_id = f"{GITHUB_REPOSITORY}/example/{GITHUB_HEAD_REF}"
+  external_id = f"{GITHUB_REPOSITORY}/example2/{GITHUB_HEAD_REF}"
   if GITHUB_EVENT_NAME == "push":
-    external_id = f"{GITHUB_REPOSITORY}/example:{GITHUB_SHA}"
+    external_id = f"{GITHUB_REPOSITORY}/example2:{GITHUB_SHA}"
   function = client.functions.retrieve(external_id=external_id)
   call = function.call(data=data)
   assert call.status == "Completed"
