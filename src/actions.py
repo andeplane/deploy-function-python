@@ -1,4 +1,5 @@
 import os
+import time
 from tempfile import TemporaryDirectory
 # from typing import Any, Dict, List, Optional, Union
 from zipfile import ZipFile
@@ -7,8 +8,13 @@ CDF_CREDENTIALS = os.getenv("INPUT_CDF_CREDENTIALS")
 FUNCTION_PATH = os.getenv("INPUT_FUNCTION_PATH")
 GITHUB_REPOSITORY = os.environ["GITHUB_REPOSITORY"]
 GITHUB_SHA = os.environ["GITHUB_SHA"][:7]
+GITHUB_HEAD_REF = os.environ["GITHUB_HEAD_REF"]
+
+class FunctionDeployTimeout(Exception):
+    pass
 
 def zip_and_upload_folder(functions_api, folder, name) -> int:
+  print(f"Uploading source code from {folder} to {name}")
   current_dir = os.getcwd()
   os.chdir(folder)
 
@@ -22,23 +28,73 @@ def zip_and_upload_folder(functions_api, folder, name) -> int:
                   zf.write(os.path.join(root, filename))
           zf.close()
 
-          file = functions_api._cognite_client.files.upload(zip_path, name=f"{name}.zip")
+          file = functions_api._cognite_client.files.upload(zip_path, name=name)
 
       return file.id
 
   finally:
       os.chdir(current_dir)
 
-def handle_push(client):
+def await_function_deployment(functions_api, external_id):
+  wait_time_seconds = 120.0
+  t_end = time.time() + wait_time_seconds
+  while time.time() < t_end:
+    function = functions_api.retrieve(external_id=external_id)
+    if function.status == "Ready":
+      return True
+    time.sleep(1.0)
+
+  return False
+
+def try_delete_function(functions_api, external_id):
+  try:
+    function = functions_api.retrieve(external_id=external_id)
+    print(f"Found existing function {external_id}. Deleting ...")
+    functions_api.delete(external_id=external_id)
+    print(f"Did delete function {external_id}.")
+  except:
+    print(f"Did not delete function {external_id}.")
+
+def create_and_wait_for_deployment(functions_api, name, external_id, file_id):
+  print(f"Will create function {external_id}")
+  function = functions_api.create(name=name, external_id=external_id, file_id=file_id)
+  print(f"Created function {external_id}. Waiting for deployment ...")
+  deployed = await_function_deployment(functions_api, function.external_id)
+  if not deployed:
+    print(f"Function {external_id} did not deploy within 120 seconds.")
+    raise FunctionDeployTimeout(f"Function {external_id} did not deploy within 120 seconds.")
+  print(f"Function {external_id} is deployed.")
+  return function
+
+def handle_push(functions_api):
   function_name = f"{GITHUB_REPOSITORY}:{GITHUB_SHA}"
   external_id = function_name
-  file_name = function_name.replace("/", "_")
+  file_name = function_name.replace("/", "_")+".zip" # / not allowed in file names
+  
   # Upload file
-  file_id = zip_and_upload_folder(client.functions, FUNCTION_PATH, file_name+".zip")
+  file_id = zip_and_upload_folder(functions_api, FUNCTION_PATH, file_name)
   
-  function = client.functions.create(name=function_name, external_id=external_id, file_id=file_id, api_key=CDF_CREDENTIALS)
-  print(f"Successfully created function {external_id} with id {function.id}")
+  try_delete_function(functions_api, external_id) # Delete old one first
+  create_and_wait_for_deployment(functions_api, function_name, external_id, file_id) # Upload new
   
-def handle_pull_request(client):
-  functions = client.functions
-  pass
+  # Delete :latest and recreate immediately. This will hopefully be fast because file_id is cached
+  function_name_latest = GITHUB_REPOSITORY+":latest"
+  external_id_latest = function_name_latest
+  try_delete_function(functions_api, external_id_latest)
+  function = create_and_wait_for_deployment(functions_api, function_name_latest, external_id_latest, file_id)
+  try_delete_function(functions_api, external_id)
+
+  print(f"Successfully created and deployed function {external_id} with id {function.id}")
+  
+def handle_pull_request(functions_api):
+  function_name = f"{GITHUB_REPOSITORY}/{GITHUB_HEAD_REF}"
+  external_id = function_name
+  try_delete_function(functions_api, external_id)
+  if os.getenv("DELETE_PR_FUNCTION"):
+    return
+  
+  # Upload file
+  file_name = function_name.replace("/", "_")+".zip" # / not allowed in file names
+  file_id = zip_and_upload_folder(functions_api, FUNCTION_PATH, file_name)
+  create_and_wait_for_deployment(functions_api, function_name, external_id, file_id)
+  

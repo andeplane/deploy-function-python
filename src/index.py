@@ -20,8 +20,8 @@ client = CogniteClient(api_key=CDF_CREDENTIALS, project=CDF_PROJECT, base_url=CD
 user = client.login.status()
 print(f"Logged in as user {user}");
 if GITHUB_EVENT_NAME == "push":
-  handle_push(client)
+  handle_push(client.functions)
 elif GITHUB_EVENT_NAME == "pull_request":
-  handle_pull_request(client)
+  handle_pull_request(client.functions)
 
 # print(len(client.assets.list()))

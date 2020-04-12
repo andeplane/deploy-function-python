@@ -1,6 +1,9 @@
 name: Deploy Cognite Function
 on:
   push:
+    branches:
+      - master
+  pull_request:
 jobs:
   deploy:
     name: Deploy
@@ -22,5 +25,6 @@ jobs:
         with:
           cdf_project: andershaf
           cdf_credentials: ${{ secrets.COGNITE_API_KEY }}
+          function_path: example
       - name: Run integration tests
         run: echo "AlL tEStS PaSsED"
