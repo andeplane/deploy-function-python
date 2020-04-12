@@ -8,7 +8,7 @@ FUNCTION_PATH = os.getenv("INPUT_FUNCTION_PATH")
 GITHUB_REPOSITORY = os.environ["GITHUB_REPOSITORY"]
 GITHUB_SHA = os.environ["GITHUB_SHA"]
 
-def zip_and_upload_folder(client, folder, name) -> int:
+def zip_and_upload_folder(functions_api, folder, name) -> int:
   current_dir = os.getcwd()
   os.chdir(folder)
 
@@ -22,7 +22,7 @@ def zip_and_upload_folder(client, folder, name) -> int:
                   zf.write(os.path.join(root, filename))
           zf.close()
 
-          file = client._cognite_client.files.upload(zip_path, name=f"{name}.zip")
+          file = functions_api._cognite_client.files.upload(zip_path, name=f"{name}.zip")
 
       return file.id
 
@@ -34,7 +34,7 @@ def handle_push(client):
   external_id = function_name
   file_name = function_name.replace("/", "_")
   # Upload file
-  file_id = zip_and_upload_folder(client, FUNCTION_PATH, file_name+".zip")
+  file_id = zip_and_upload_folder(client.functions, FUNCTION_PATH, file_name+".zip")
   
   function = client.functions.create(name=function_name, external_id=external_id, file_id=file_id, api_key=CDF_CREDENTIALS)
   print(f"Successfully created function {external_id} with id {function.id}")
