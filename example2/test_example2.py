@@ -25,6 +25,6 @@ def test_handler(client, data):
     external_id = f"{GITHUB_REPOSITORY}/example:{GITHUB_SHA}"
   function = client.functions.retrieve(external_id=external_id)
   call = function.call(data=data)
-  with open("lol.txt", "w") as f:
-    f.write(call.response)
+  assert call.status == "Completed"
+  assert call.response["result"] == 4.0 * data["value"]
   

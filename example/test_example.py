@@ -24,5 +24,6 @@ def test_handler(client, data):
   if GITHUB_EVENT_NAME == "push":
     external_id = f"{GITHUB_REPOSITORY}/example:{GITHUB_SHA}"
   function = client.functions.retrieve(external_id=external_id)
-  response = function.call(data=data)
-  print(response)
+  call = function.call(data=data)
+  assert call.status == "Completed"
+  assert call.response["result"] == 2.0 * data["value"]
