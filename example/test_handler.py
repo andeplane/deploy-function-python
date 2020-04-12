@@ -3,12 +3,16 @@ import os
 from cognite.experimental import CogniteClient
 
 GITHUB_REPOSITORY = os.environ["GITHUB_REPOSITORY"]
-FUNCTION_PATH     = os.getenv("INPUT_FUNCTION_PATH")
+FUNCTION_PATH     = os.environ["INPUT_FUNCTION_PATH"]
 GITHUB_HEAD_REF   = os.environ["GITHUB_HEAD_REF"]
 
 @pytest.fixture
 def client():
-    client = CogniteClient(api_key=os.environ["INPUT_CDF_CREDENTIALS"], project=os.environ["INPUT_CDF_PROJECT"], client_name="deploy-function-action")
+    client = CogniteClient(
+      api_key=os.environ["INPUT_CDF_CREDENTIALS"], 
+      project=os.environ["INPUT_CDF_PROJECT"], 
+      base_url=os.environ["INPUT_CDF_BASE_URL"], 
+      client_name="deploy-function-action")
     return client
 
 @pytest.fixture

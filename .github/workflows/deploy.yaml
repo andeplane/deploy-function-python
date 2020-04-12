@@ -31,4 +31,6 @@ jobs:
           cdf_credentials: ${{ secrets.COGNITE_API_KEY }}
           function_path: ${{ matrix.functions }}
       - name: Run integration tests
-        run: echo "AlL tEStS PaSsED"
+        run: |
+          pip install pytest
+          pytest
