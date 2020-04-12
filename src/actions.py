@@ -6,7 +6,7 @@ from zipfile import ZipFile
 CDF_CREDENTIALS = os.getenv("INPUT_CDF_CREDENTIALS")
 FUNCTION_PATH = os.getenv("INPUT_FUNCTION_PATH")
 GITHUB_REPOSITORY = os.environ["GITHUB_REPOSITORY"]
-GITHUB_SHA = os.environ["GITHUB_SHA"]
+GITHUB_SHA = os.environ["GITHUB_SHA"][:7]
 
 def zip_and_upload_folder(functions_api, folder, name) -> int:
   current_dir = os.getcwd()
