@@ -1,4 +1,4 @@
-# from cognite.client import CogniteClient
+from cognite.experimental import CogniteClient
 import os
 from actions import handle_pull_request, handle_push
 
