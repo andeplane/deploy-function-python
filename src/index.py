@@ -1,7 +1,6 @@
 from actions import handle_pull_request, handle_push
 from cognite.experimental import CogniteClient
 import os
-import subprocess
 
 CDF_PROJECT = os.getenv("INPUT_CDF_PROJECT")
 CDF_CREDENTIALS = os.getenv("INPUT_CDF_CREDENTIALS")
@@ -15,7 +14,7 @@ if not (CDF_PROJECT and CDF_CREDENTIALS and FUNCTION_PATH):
   exit()
 
 print(f"Handling event {GITHUB_EVENT_NAME} on {GITHUB_REF}", flush=True)
-subprocess.call("git diff --name-only HEAD HEAD~1", shell=True)
+
 client = CogniteClient(api_key=CDF_CREDENTIALS, project=CDF_PROJECT, base_url=CDF_BASE_URL)
 
 user = client.login.status()
