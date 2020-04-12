@@ -78,7 +78,7 @@ def handle_push(functions_api):
   create_and_wait_for_deployment(functions_api, function_name, external_id, file_id) # Upload new
   
   # Delete :latest and recreate immediately. This will hopefully be fast because file_id is cached
-  function_name_latest = f"GITHUB_REPOSITORY/{FUNCTION_PATH}:latest"
+  function_name_latest = f"{GITHUB_REPOSITORY}/{FUNCTION_PATH}:latest"
   external_id_latest = function_name_latest
   try_delete_function(functions_api, external_id_latest)
   function = create_and_wait_for_deployment(functions_api, function_name_latest, external_id_latest, file_id)
