@@ -7,6 +7,9 @@ jobs:
     name: Delete PR function
     # This job runs on Linux
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        functions: [example, example2]
     steps:
       - name: Delete PR function
         uses: andeplane/deploy-function-python@master
@@ -16,3 +19,5 @@ jobs:
           cdf_project: andershaf
           cdf_base_url: https://api.cognitedata.com
           cdf_credentials: ${{ secrets.COGNITE_API_KEY }}
+          function_path: ${{ matrix.functions }}
+          
