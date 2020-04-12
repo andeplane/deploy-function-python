@@ -8,6 +8,7 @@ GITHUB_EVENT_NAME = os.environ["GITHUB_EVENT_NAME"]
 GITHUB_HEAD_REF   = os.environ["GITHUB_HEAD_REF"]
 GITHUB_SHA        = os.environ["GITHUB_SHA"]
 
+
 @pytest.fixture
 def client():
     client = CogniteClient()
