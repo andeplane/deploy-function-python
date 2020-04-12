@@ -20,4 +20,4 @@ outputs:
     description: The ID of the function output. Use this to do calls against the API!
 runs:
   using: 'docker'
-  image: src/index.py
+  image: Dockerfile

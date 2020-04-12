@@ -5,4 +5,4 @@ COPY . /
 # RUN npm install cognite-sdk
 # RUN npm install cognite-sdk-experimental
 
-CMD python /src/index.py
+CMD python src/index.py
