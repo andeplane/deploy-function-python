@@ -5,7 +5,7 @@ from tempfile import TemporaryDirectory
 from zipfile import ZipFile
 
 CDF_CREDENTIALS = os.getenv("INPUT_CDF_CREDENTIALS")
-FUNCTION_PATH = os.getenv("INPUT_FUNCTION_PATH")
+FUNCTIONS = os.getenv("INPUT_FUNCTIONS")
 GITHUB_REPOSITORY = os.environ["GITHUB_REPOSITORY"]
 GITHUB_SHA = os.environ["GITHUB_SHA"][:7]
 GITHUB_HEAD_REF = os.environ["GITHUB_HEAD_REF"]
@@ -72,7 +72,7 @@ def handle_push(functions_api):
   file_name = function_name.replace("/", "_")+".zip" # / not allowed in file names
   
   # Upload file
-  file_id = zip_and_upload_folder(functions_api, FUNCTION_PATH, file_name)
+  file_id = zip_and_upload_folder(functions_api, FUNCTIONS, file_name)
   
   try_delete_function(functions_api, external_id) # Delete old one first
   create_and_wait_for_deployment(functions_api, function_name, external_id, file_id) # Upload new
@@ -95,7 +95,7 @@ def handle_pull_request(functions_api):
   
   # Upload file
   file_name = function_name.replace("/", "_")+".zip" # / not allowed in file names
-  file_id = zip_and_upload_folder(functions_api, FUNCTION_PATH, file_name)
+  file_id = zip_and_upload_folder(functions_api, FUNCTIONS, file_name)
   function = create_and_wait_for_deployment(functions_api, function_name, external_id, file_id)
 
   print(f"Successfully created and deployed PR function {external_id} with id {function.id}", flush=True)

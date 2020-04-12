@@ -9,6 +9,9 @@ jobs:
     name: Deploy
     # This job runs on Linux
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        functions: [example, example2]
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-python@v1
@@ -25,6 +28,6 @@ jobs:
         with:
           cdf_project: andershaf
           cdf_credentials: ${{ secrets.COGNITE_API_KEY }}
-          function_paths: [example, example2]
+          functions: ${{ matrix.functions }}
       - name: Run integration tests
         run: echo "AlL tEStS PaSsED"
