@@ -24,5 +24,7 @@ def test_handler(client, data):
   if GITHUB_EVENT_NAME == "push":
     external_id = f"{GITHUB_REPOSITORY}/example:{GITHUB_SHA}"
   function = client.functions.retrieve(external_id=external_id)
-  response = function.call(data=data)
-  print(response.json())
+  call = function.call(data=data)
+  with open("lol.txt", "w") as f:
+    f.write(call.response)
+  

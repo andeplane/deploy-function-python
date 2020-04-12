@@ -25,4 +25,4 @@ def test_handler(client, data):
     external_id = f"{GITHUB_REPOSITORY}/example:{GITHUB_SHA}"
   function = client.functions.retrieve(external_id=external_id)
   response = function.call(data=data)
-  print(response.json())
+  print(response)
