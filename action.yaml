@@ -19,5 +19,5 @@ outputs:
   functionId: # id of output
     description: The ID of the function output. Use this to do calls against the API!
 runs:
-  using: 'python'
+  using: 'docker'
   image: src/index.py
