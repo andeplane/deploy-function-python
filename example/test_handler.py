@@ -2,6 +2,7 @@ import pytest
 import os
 from cognite.experimental import CogniteClient
 
+print(os.environ)
 GITHUB_REPOSITORY = os.environ["GITHUB_REPOSITORY"]
 FUNCTION_PATH     = os.environ["INPUT_FUNCTION_PATH"]
 GITHUB_HEAD_REF   = os.environ["GITHUB_HEAD_REF"]
