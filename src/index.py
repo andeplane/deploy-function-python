@@ -15,4 +15,4 @@ if not CDF_CREDENTIALS:
   exit() 
 
 client = CogniteClient(api_key=CDF_CREDENTIALS, project=CDF_PROJECT, base_url=CDF_BASE_URL)
-print(len(client.assets.list())
+print(len(client.assets.list()))
