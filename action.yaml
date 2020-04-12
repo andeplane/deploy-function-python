@@ -11,10 +11,10 @@ inputs:
     description: Base url of your cdf project
     default: https://api.cognitedata.com
     required: false
-  handler_path:
-    description: Path to the python function
+  function_path:
+    description: Path to the directory containing the Python function
     required: false
-    default: handler.py
+    default: example
 outputs:
   functionId: # id of output
     description: The ID of the function output. Use this to do calls against the API!
