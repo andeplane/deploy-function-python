@@ -38,4 +38,4 @@ jobs:
           COGNITE_CLIENT_NAME: cognite-function-deploy
         run: |
           pip install pytest
-          pytest
+          pytest ${{ matrix.functions }}
