@@ -21,8 +21,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install cognite-sdk-experimental
+          pip install pytest
       - name: Test code
-        run: echo "AlL tEStS PaSsED"
+        run: pytest ${{ matrix.functions }} -m "unit"
       - name: Deploy
         uses: ./
         with:
@@ -36,6 +37,4 @@ jobs:
           COGNITE_PROJECT: datastudio
           COGNITE_BASE_URL: https://greenfield.cognitedata.com
           COGNITE_CLIENT_NAME: cognite-function-deploy
-        run: |
-          pip install pytest
-          pytest ${{ matrix.functions }}
+        run: pytest ${{ matrix.functions }} -m "integration"

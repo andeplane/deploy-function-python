@@ -1,6 +1,7 @@
 import pytest
 import os
 from cognite.experimental import CogniteClient
+from handler import handle
 
 print(os.environ)
 GITHUB_REPOSITORY = os.environ["GITHUB_REPOSITORY"]
@@ -20,7 +21,8 @@ def data():
       "value": 2.0
     }
 
-def test_handler(client, data):
+@pytest.mark.integration
+def test_deployed_function(data, client):
   external_id = f"{GITHUB_REPOSITORY}/example2/{GITHUB_HEAD_REF}"
   if GITHUB_EVENT_NAME == "push":
     external_id = f"{GITHUB_REPOSITORY}/example2:{GITHUB_SHA}"
@@ -29,3 +31,7 @@ def test_handler(client, data):
   assert call.status == "Completed"
   assert call.response["result"] == 4.0 * data["value"]
   
+@pytest.mark.unit
+def test_handler(data, client):
+  result = handle(data, client)
+  result == 2.0 * data["value"]

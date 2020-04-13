@@ -1,6 +1,6 @@
 import time
 
-def handle(data, client, secrets):
+def handle(data, client):
     print("Hello anders. Will sleep a bit now...")
     time.sleep(3.0)
     print("Did sleep. Will sleep some more, but first, print another line")
