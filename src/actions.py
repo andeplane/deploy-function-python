@@ -13,8 +13,8 @@ GITHUB_HEAD_REF = os.environ["GITHUB_HEAD_REF"]
 class FunctionDeployTimeout(Exception):
     pass
 
-def zip_and_upload_folder(functions_api, folder, name) -> int:
-  print(f"Uploading source code from {folder} to {name}", flush=True)
+def zip_and_upload_folder(functions_api, folder, file_name) -> int:
+  print(f"Uploading source code from {folder} to {file_name}", flush=True)
   current_dir = os.getcwd()
   os.chdir(folder)
 
@@ -28,7 +28,7 @@ def zip_and_upload_folder(functions_api, folder, name) -> int:
                   zf.write(os.path.join(root, filename))
           zf.close()
 
-          file = functions_api._cognite_client.files.upload(zip_path, name=name)
+          file = functions_api._cognite_client.files.upload(zip_path, name=file_name, external_id=file_name)
 
       return file.id
 
