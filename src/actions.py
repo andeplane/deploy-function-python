@@ -28,7 +28,7 @@ def zip_and_upload_folder(functions_api, folder, file_name) -> int:
                   zf.write(os.path.join(root, filename))
           zf.close()
 
-          file = functions_api._cognite_client.files.upload(zip_path, name=file_name, external_id=file_name)
+          file = functions_api._cognite_client.files.upload(zip_path, name=file_name, external_id=file_name, overwrite=True)
 
       return file.id
 
