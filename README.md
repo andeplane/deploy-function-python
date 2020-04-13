@@ -8,7 +8,7 @@ This action deploys a Python function to Cognite Functions.
 
 ### `function_path`
 
-Path to a directory containing your function. By using strategy.matrix, multiple functions can be used.
+Path to a directory containing your function. By using `strategy.matrix` in your workflow, multiple functions can be used.
 
 ### `cdf_project`
 
