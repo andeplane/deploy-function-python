@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - master
-  pull_request:
 jobs:
   deploy:
     name: Deploy
@@ -36,10 +35,3 @@ jobs:
           cdf_base_url: https://greenfield.cognitedata.com
           cdf_credentials: ${{ secrets.COGNITE_API_KEY }}
           function_path: ${{ matrix.functions }}
-      - name: Run integration tests
-        env:
-          COGNITE_API_KEY: ${{ secrets.COGNITE_API_KEY }}
-          COGNITE_PROJECT: datastudio
-          COGNITE_BASE_URL: https://greenfield.cognitedata.com
-          COGNITE_CLIENT_NAME: cognite-function-deploy
-        run: pytest ${{ matrix.functions }} -m "integration"
