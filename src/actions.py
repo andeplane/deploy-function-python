@@ -35,8 +35,7 @@ def zip_and_upload_folder(functions_api, folder, name) -> int:
   finally:
       os.chdir(current_dir)
 
-def await_function_deployment(functions_api, external_id):
-  wait_time_seconds = 240.0
+def await_function_deployment(functions_api, external_id, wait_time_seconds):
   t_end = time.time() + wait_time_seconds
   while time.time() < t_end:
     function = functions_api.retrieve(external_id=external_id)
@@ -44,7 +43,7 @@ def await_function_deployment(functions_api, external_id):
       return True
     if function.status == "Failed":
       return False
-    time.sleep(1.0)
+    time.sleep(5.0)
 
   return False
 
@@ -61,10 +60,11 @@ def create_and_wait_for_deployment(functions_api, name, external_id, file_id):
   print(f"Will create function {external_id}", flush=True)
   function = functions_api.create(name=name, external_id=external_id, file_id=file_id)
   print(f"Created function {external_id}. Waiting for deployment ...", flush=True)
-  deployed = await_function_deployment(functions_api, function.external_id)
+  wait_time_seconds = 300 # 5 minutes
+  deployed = await_function_deployment(functions_api, function.external_id, wait_time_seconds)
   if not deployed:
-    print(f"Function {external_id} did not deploy within 240 seconds.", flush=True)
-    raise FunctionDeployTimeout(f"Function {external_id} did not deploy within 240 seconds.")
+    print(f"Function {external_id} did not deploy within {wait_time_seconds} seconds.", flush=True)
+    raise FunctionDeployTimeout(f"Function {external_id} did not deploy within {wait_time_seconds} seconds.")
   print(f"Function {external_id} is deployed.", flush=True)
   return function
 
