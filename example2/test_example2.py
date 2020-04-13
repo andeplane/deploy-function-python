@@ -27,5 +27,5 @@ def test_handler(client, data):
   function = client.functions.retrieve(external_id=external_id)
   call = function.call(data=data)
   assert call.status == "Completed"
-  assert call.response["result"] == 4.0 * data["value"]
+  assert call.response["result"] == 5.0 * data["value"]
   
