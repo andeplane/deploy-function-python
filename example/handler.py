@@ -6,7 +6,9 @@ def handle(data, client):
     print("Did sleep. Will sleep some more, but first, print another line")
     print("Here it is.")
     time.sleep(1.0)
-    print("Ok, I'm done now.")
+    print("Ok, I'm done now. Fetching an asset")
+    asset = client.assets.retrieve(external_id = "my_special_asset")
     return {
-        "result": 2.0 * data["value"]
+        "result": 2.0 * data["value"],
+        "assetName": asset.name,
     }
