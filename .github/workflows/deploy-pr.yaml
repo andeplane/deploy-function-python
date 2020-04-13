@@ -1,0 +1,42 @@
+name: Deploy PR function
+on:
+  pull_request:
+jobs:
+  deploy:
+    name: Deploy PR function
+    # This job runs on Linux
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        functions: [example, example2]
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install cognite-sdk-experimental
+          pip install pytest
+      - name: Test code
+        env:
+          COGNITE_API_KEY: ${{ secrets.COGNITE_API_KEY }}
+          COGNITE_PROJECT: datastudio
+          COGNITE_BASE_URL: https://greenfield.cognitedata.com
+          COGNITE_CLIENT_NAME: cognite-function-deploy
+        run: pytest ${{ matrix.functions }} -m "unit"
+      - name: Deploy
+        uses: ./
+        with:
+          cdf_project: datastudio
+          cdf_base_url: https://greenfield.cognitedata.com
+          cdf_credentials: ${{ secrets.COGNITE_API_KEY }}
+          function_path: ${{ matrix.functions }}
+      - name: Run integration tests
+        env:
+          COGNITE_API_KEY: ${{ secrets.COGNITE_API_KEY }}
+          COGNITE_PROJECT: datastudio
+          COGNITE_BASE_URL: https://greenfield.cognitedata.com
+          COGNITE_CLIENT_NAME: cognite-function-deploy
+        run: pytest ${{ matrix.functions }} -m "integration"
