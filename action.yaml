@@ -4,8 +4,11 @@ inputs:
   cdf_project:
     description: The name of your cdf project
     required: true
-  cdf_credentials:
-    description: CDF api key that's used to deploy the function
+  cdf_deployment_credentials:
+    description: CDF API key that's provided to the deployed function
+    required: false
+  cdf_function_credentials:
+    description: CDF API key that's used for deployment
     required: true
   cdf_base_url:
     description: Base url of your cdf project

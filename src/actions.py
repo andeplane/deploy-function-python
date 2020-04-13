@@ -4,7 +4,7 @@ from tempfile import TemporaryDirectory
 # from typing import Any, Dict, List, Optional, Union
 from zipfile import ZipFile
 
-CDF_CREDENTIALS = os.getenv("INPUT_CDF_CREDENTIALS")
+CDF_FUNCTION_CREDENTIALS = os.getenv("INPUT_CDF_FUNCTION_CREDENTIALS")
 FUNCTION_PATH = os.getenv("INPUT_FUNCTION_PATH")
 GITHUB_REPOSITORY = os.environ["GITHUB_REPOSITORY"]
 GITHUB_SHA = os.environ["GITHUB_SHA"][:7]
@@ -58,7 +58,8 @@ def try_delete_function(functions_api, external_id):
 
 def create_and_wait_for_deployment(functions_api, name, external_id, file_id):
   print(f"Will create function {external_id}", flush=True)
-  function = functions_api.create(name=name, external_id=external_id, file_id=file_id)
+  api_key = CDF_FUNCTION_CREDENTIALS
+  function = functions_api.create(name=name, external_id=external_id, file_id=file_id, api_key=api_key)
   print(f"Created function {external_id}. Waiting for deployment ...", flush=True)
   wait_time_seconds = 300 # 5 minutes
   deployed = await_function_deployment(functions_api, function.external_id, wait_time_seconds)
