@@ -33,5 +33,6 @@ jobs:
         with:
           cdf_project: datastudio
           cdf_base_url: https://greenfield.cognitedata.com
-          cdf_credentials: ${{ secrets.COGNITE_API_KEY }}
+          cdf_deployment_credentials: ${{ secrets.COGNITE_API_KEY }}
+          cdf_function_credentials: ${{ secrets.COGNITE_API_KEY }}
           function_path: ${{ matrix.functions }}
