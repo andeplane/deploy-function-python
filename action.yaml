@@ -6,10 +6,10 @@ inputs:
     required: true
   cdf_deployment_credentials:
     description: CDF API key that's provided to the deployed function
-    required: false
+    required: true
   cdf_function_credentials:
     description: CDF API key that's used for deployment
-    required: true
+    required: false
   cdf_base_url:
     description: Base url of your cdf project
     default: https://api.cognitedata.com
