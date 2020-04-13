@@ -5,7 +5,7 @@ def handle(data, client, secrets):
     time.sleep(3.0)
     print("Did sleep. Will sleep some more, but first, print another line")
     print("Here it is.")
-    time.sleep(2.0)
+    time.sleep(8.0)
     print("Ok, I'm done now.")
     return {
         "result": 2.0 * data["value"]
