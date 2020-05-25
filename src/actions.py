@@ -61,7 +61,7 @@ def create_and_wait_for_deployment(functions_api, name, external_id, file_id):
   print(f"Will create function {external_id}. With api key: {api_key is not None}", flush=True)
   function = functions_api.create(name=name, external_id=external_id, file_id=file_id, api_key=api_key)
   print(f"Created function {external_id}. Waiting for deployment ...", flush=True)
-  wait_time_seconds = 300 # 5 minutes
+  wait_time_seconds = 600 # 10 minutes
   deployed = await_function_deployment(functions_api, function.external_id, wait_time_seconds)
   if not deployed:
     print(f"Function {external_id} did not deploy within {wait_time_seconds} seconds.", flush=True)
